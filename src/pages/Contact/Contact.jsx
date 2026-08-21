@@ -1,71 +1,14 @@
-import { useState } from "react";
-
 import { FaPhone, FaMapMarkerAlt, FaInstagram, FaTelegramPlane, FaWhatsapp, FaPaperPlane, FaMap } from "react-icons/fa";
 
 import Navbar from "../../components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function About() {
-  const [showMore, setShowMore] = useState(false);
-
-  const aboutText = `Rezin Turk یک فروشگاه تخصصی در زمینه عرضه و تأمین محصولات شیمیایی و حلال‌ها است. هدف ما ارائه محصولاتی با کیفیت مناسب، قیمت رقابتی و خدمات قابل اعتماد به مشتریان است.
-
-محصولات فروشگاه شامل انواع تینر فوری، تینر روغنی، جوهر نمک، اسید، لوله بازکن و سایر محصولات شیمیایی می‌باشد.
-
-ما تلاش می‌کنیم با ارائه محصولات مناسب و پاسخگویی سریع، تجربه‌ای ساده و مطمئن برای مشتریان خود ایجاد کنیم و در مسیر فعالیت خود کیفیت محصولات و رضایت مشتری را در اولویت قرار دهیم.`;
-
   return (
     <>
       <Navbar />
       <div className="font-vazir min-h-screen bg-white text-black" dir="rtl">
         <main className="pt-28 pb-16">
-          <section className="px-5 sm:px-8 lg:px-12 py-8">
-            <div className="max-w-7xl mx-auto">
-              <div className="relative overflow-hidden rounded-4xl bg-[#061b4f] px-7 py-12 sm:px-10 sm:py-14 lg:px-14">
-                <div className="absolute -top-32 -left-32 w-80 h-80 rounded-full bg-blue-500/20 blur-3xl" />
-
-                <div className="absolute -bottom-32 -right-32 w-80 h-80 rounded-full bg-blue-600/20 blur-3xl" />
-
-                <div className="relative z-10 max-w-3xl">
-                  <span className="text-blue-400 text-sm sm:text-base font-semibold">REZIN TURK</span>
-
-                  <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-bold text-white">درباره فروشگاه Rezin Turk</h1>
-
-                  <p className="mt-5 text-blue-100/75 leading-8 text-sm sm:text-base lg:text-lg max-w-2xl">عرضه محصولات شیمیایی و حلال‌ها با کیفیت مناسب، قیمت رقابتی و خدمات قابل اعتماد.</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="px-5 sm:px-8 lg:px-12 py-10">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-stretch">
-                <div className="w-full md:w-1/2 lg:w-2/5">
-                  <div className="relative w-full h-72 sm:h-80 md:h-full min-h-87.5 rounded-3xl overflow-hidden shadow-lg bg-blue-50">
-                    <img src="/banner/about.jpg" alt="فروشگاه Rezin Turk" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                  </div>
-                </div>
-
-                <div className="w-full md:w-1/2 lg:w-3/5">
-                  <div className="bg-gray-50 rounded-3xl p-6 sm:p-8 shadow-md h-full">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-[#071936]"> Rezin Turk</h2>
-
-                    <div className="mt-3 w-14 h-1 bg-blue-600 rounded-full" />
-
-                    <p className={`mt-6 text-justify leading-8 text-gray-700 whitespace-pre-line ${!showMore ? "line-clamp-5" : ""}`}>{aboutText}</p>
-
-                    <button
-                      type="button"
-                      onClick={() => setShowMore(!showMore)}
-                      className="mt-6 py-2.5 px-6 rounded-full bg-white border border-blue-100 text-black text-sm font-bold shadow-md hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:scale-105 active:scale-95 transition-all duration-300"
-                    >
-                      {showMore ? "بستن متن" : "مشاهده ادامه متن"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
           <section className="px-5 sm:px-8 lg:px-12 py-10">
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-10">
@@ -193,6 +136,7 @@ export default function About() {
           </section>
         </main>
       </div>
+      <Footer />
     </>
   );
 }

@@ -3,8 +3,8 @@ export const products = [
     id: "tinner-fori",
     name: "تینر فوری",
     category: "تینر",
-    image: "/products/thinner-immediate.jpg",
-    description: "تینر فوری مناسب برای مصارف صنعتی و رنگ‌کاری. این محصول در مدل‌های ۱۰ هزار و ۲۰ هزار عرضه می‌شود.",
+    image: "/product/product1.png",
+    description: "تینر فوری مناسب برای مصارف صنعتی و رنگ‌کاری با کیفیت مناسب و قدرت حلالیت بالا.",
 
     variants: [
       {
@@ -20,52 +20,13 @@ export const products = [
 
             quantityPerPackage: 12,
 
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
+            unitPrice: 150000,
 
-          {
-            id: "gallon",
-            name: "گالنی",
-            type: "گالن",
-            unit: "گالن",
+            originalPrice: 180000,
 
-            quantityPerPackage: 4,
+            price: 150000,
 
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "can",
-            name: "حلب",
-            type: "حلب",
-            unit: "حلب",
-
-            quantityPerPackage: 1,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "drum",
-            name: "بشکه",
-            type: "بشکه",
-            unit: "بشکه",
-
-            quantityPerPackage: 1,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
+            discountPercent: 17,
           },
         ],
       },
@@ -83,52 +44,10 @@ export const products = [
 
             quantityPerPackage: 12,
 
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "gallon",
-            name: "گالنی",
-            type: "گالن",
-            unit: "گالن",
-
-            quantityPerPackage: 4,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "can",
-            name: "حلب",
-            type: "حلب",
-            unit: "حلب",
-
-            quantityPerPackage: 1,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "drum",
-            name: "بشکه",
-            type: "بشکه",
-            unit: "بشکه",
-
-            quantityPerPackage: 1,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
+            unitPrice: 200000,
+            originalPrice: 240000,
+            price: 200000,
+            discountPercent: 17,
           },
         ],
       },
@@ -139,8 +58,8 @@ export const products = [
     id: "tinner-roghani",
     name: "تینر روغنی",
     category: "تینر",
-    image: "/products/thinner-oil.jpg",
-    description: "تینر روغنی مناسب برای رنگ‌های روغنی و مصارف صنعتی.",
+    image: "/product/product2.png",
+    description: "تینر روغنی مناسب برای رنگ‌های روغنی و مصارف صنعتی با کیفیت مناسب.",
 
     variants: [
       {
@@ -156,52 +75,10 @@ export const products = [
 
             quantityPerPackage: 12,
 
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "gallon",
-            name: "گالنی",
-            type: "گالن",
-            unit: "گالن",
-
-            quantityPerPackage: 4,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "can",
-            name: "حلب",
-            type: "حلب",
-            unit: "حلب",
-
-            quantityPerPackage: 1,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "drum",
-            name: "بشکه",
-            type: "بشکه",
-            unit: "بشکه",
-
-            quantityPerPackage: 1,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
+            unitPrice: 130000,
+            originalPrice: 155000,
+            price: 130000,
+            discountPercent: 16,
           },
         ],
       },
@@ -219,52 +96,10 @@ export const products = [
 
             quantityPerPackage: 12,
 
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "gallon",
-            name: "گالنی",
-            type: "گالن",
-            unit: "گالن",
-
-            quantityPerPackage: 4,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "can",
-            name: "حلب",
-            type: "حلب",
-            unit: "حلب",
-
-            quantityPerPackage: 1,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
-          },
-
-          {
-            id: "drum",
-            name: "بشکه",
-            type: "بشکه",
-            unit: "بشکه",
-
-            quantityPerPackage: 1,
-
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
+            unitPrice: 170000,
+            originalPrice: 200000,
+            price: 170000,
+            discountPercent: 15,
           },
         ],
       },
@@ -275,7 +110,7 @@ export const products = [
     id: "dish-killer-33",
     name: "جوهر نمک دیس‌کیلر ۳۳٪",
     category: "اسید",
-    image: "/products/joher-namak.jpg",
+    image: "/product/product3.png",
     description: "جوهر نمک دیس‌کیلر ۳۳ درصد مناسب برای مصارف صنعتی.",
 
     variants: [
@@ -292,10 +127,10 @@ export const products = [
 
             quantityPerPackage: 1,
 
-            unitPrice: 0,
-            originalPrice: 0,
-            price: 0,
-            discountPercent: 0,
+            unitPrice: 450000,
+            originalPrice: 500000,
+            price: 450000,
+            discountPercent: 10,
           },
         ],
       },
