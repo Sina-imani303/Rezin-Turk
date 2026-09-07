@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { HiMiniShoppingBag } from "react-icons/hi2";
+import { FaUser } from "react-icons/fa";
 
 export default function Navbar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -20,6 +21,7 @@ export default function Navbar() {
             <Link to="/" className="flex items-center shrink-0" aria-label="Rezin Turk">
               <img src="/logo/logo.png" alt="Rezin Turk" className="w-18 sm:w-20.5 h-12 sm:h-14 object-contain" />
             </Link>
+
             <div className="hidden md:flex items-center justify-center gap-9 lg:gap-7 xl:gap-12">
               <Link to="/" className="text-sm lg:text-[15px] font-semibold text-[#071936] hover:text-blue-600 transition duration-300">
                 خانه
@@ -33,8 +35,14 @@ export default function Navbar() {
                 ارتباط با ما
               </Link>
             </div>
-            <div className="hidden md:flex items-center gap-10">
-              <div className="flex items-center gap- whitespace-nowrap">
+
+            <div className="hidden md:flex items-center gap-9">
+              <Link to="/account" className="flex items-center gap-2 text-sm font-semibold text-[#071936] hover:text-blue-600 transition">
+                <FaUser className="text-xs" />
+                <span>حساب کاربری</span>
+              </Link>
+
+              <div className="flex items-center gap-2 whitespace-nowrap">
                 <Link to="/login" className="text-sm font-semibold text-[#071936] hover:text-blue-600 transition">
                   ورود
                 </Link>
@@ -54,6 +62,7 @@ export default function Navbar() {
                 {totalItems > 0 && <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] text-white">{totalItems}</span>}
               </Link>
             </div>
+
             <button
               type="button"
               aria-label="باز کردن منو"
@@ -139,6 +148,19 @@ export default function Navbar() {
 
               <div className="space-y-2">
                 <Link
+                  to="/account"
+                  onClick={closeDrawer}
+                  className="flex items-center justify-between px-5 py-4 rounded-2xl text-[#071936] font-semibold hover:bg-blue-50 hover:text-blue-600 active:scale-[0.98] transition"
+                >
+                  <span className="flex items-center gap-3">
+                    <FaUser className="text-sm text-blue-500" />
+                    حساب کاربری
+                  </span>
+
+                  <span className="text-blue-400">←</span>
+                </Link>
+
+                <Link
                   to="/login"
                   onClick={closeDrawer}
                   className="flex items-center justify-between px-5 py-4 rounded-2xl text-[#071936] font-semibold hover:bg-blue-50 hover:text-blue-600 active:scale-[0.98] transition"
@@ -170,6 +192,7 @@ export default function Navbar() {
                   {totalItems > 0 && <span className="mr-auto rounded-full bg-white text-blue-600 text-xs font-bold px-2 py-1">{totalItems}</span>}
                 </Link>
               </div>
+
               <div className="mt-8 rounded-2xl bg-blue-50 border border-blue-100 p-5 text-center">
                 <p className="text-xs text-blue-400 font-semibold">REZIN TURK</p>
 
@@ -179,6 +202,7 @@ export default function Navbar() {
           </aside>
         </>
       )}
+
       <style>
         {`
           @keyframes slideIn {

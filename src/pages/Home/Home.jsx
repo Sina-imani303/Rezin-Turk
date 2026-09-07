@@ -1,71 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaArrowLeft, FaChevronLeft, FaChevronRight, FaFlask, FaIndustry, FaShippingFast, FaCheckCircle, FaPhoneAlt } from "react-icons/fa";
+
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
-import "./Home.css";
-
-const STAGGER = 0.035;
-
-const TextRoll = ({ children, className = "", center = false }) => {
-  return (
-    <motion.span initial="initial" whileHover="hovered" className={`relative block h-[1.15em] overflow-hidden ${className}`}>
-      <span className="block">
-        {children.split("").map((letter, index) => {
-          const delay = center ? STAGGER * Math.abs(index - (children.length - 1) / 2) : STAGGER * index;
-
-          return (
-            <motion.span
-              key={`top-${index}`}
-              variants={{
-                initial: { y: 0 },
-                hovered: { y: "-100%" },
-              }}
-              transition={{
-                ease: "easeInOut",
-                delay,
-                duration: 0.35,
-              }}
-              className="inline-block"
-            >
-              {letter === " " ? "\u00A0" : letter}
-            </motion.span>
-          );
-        })}
-      </span>
-
-      <span className="absolute inset-0">
-        {children.split("").map((letter, index) => {
-          const delay = center ? STAGGER * Math.abs(index - (children.length - 1) / 2) : STAGGER * index;
-
-          return (
-            <motion.span
-              key={`bottom-${index}`}
-              variants={{
-                initial: {
-                  y: "110%",
-                  opacity: 0,
-                },
-                hovered: {
-                  y: 0,
-                  opacity: 1,
-                },
-              }}
-              transition={{
-                ease: "easeInOut",
-                delay,
-                duration: 0.35,
-              }}
-              className="inline-block text-blue-600"
-            >
-              {letter === " " ? "\u00A0" : letter}
-            </motion.span>
-          );
-        })}
-      </span>
-    </motion.span>
-  );
-};
 
 const banners = [
   {
@@ -91,16 +29,19 @@ const productImages = [
     id: 1,
     image: "/product/product1.png",
     title: "تینر فوری",
+    description: "مناسب برای مصارف صنعتی و کارگاهی",
   },
   {
     id: 2,
     image: "/product/product2.png",
     title: "تینر روغنی",
+    description: "انتخابی مناسب برای کاربردهای تخصصی",
   },
   {
     id: 3,
     image: "/product/product3.png",
-    title: "جوهر نمک دیس‌کیلر",
+    title: "جوهر نمک",
+    description: "محصول شیمیایی با کاربردهای متنوع",
   },
 ];
 
@@ -127,166 +68,113 @@ export default function Home() {
     <>
       <Navbar />
 
-      <main dir="rtl" className="font-vazir bg-white text-black">
-        <section className="relative overflow-hidden bg-white pt-28 sm:pt-32">
-          <div className="absolute -right-32 -top-32 h-72 w-72 rounded-full bg-blue-600/10 blur-3xl sm:-right-40 sm:-top-40 sm:h-105 sm:w-105" />
+      <main dir="rtl" className="overflow-hidden bg-white text-[#071936]">
+        <section className="relative min-h-screen overflow-hidden bg-white pt-24 sm:pt-28">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: "url('/banner/hero.png')",
+            }}
+          />
 
-          <div className="absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl sm:-bottom-40 sm:-left-40 sm:h-105 sm:w-105" />
+          <div className="absolute inset-0 bg-white/15" />
 
-          <div className="relative z-10 mx-auto flex min-h-[calc(100vh-7rem)] max-w-7xl items-center px-5 py-12 sm:px-8 lg:px-10">
-            <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-20">
-              <div className="order-2 flex flex-col items-center text-center lg:order-1 lg:items-end lg:text-right">
-                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 sm:mb-6">
-                  <span className="h-2 w-2 rounded-full bg-blue-600" />
+          <div className="absolute inset-0 bg-linear-to-l from-white/95 via-white/55 to-white/10" />
 
-                  <span className="text-xs font-medium text-blue-700 sm:text-sm">REZIN TURK</span>
-                </div>
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-white/55 to-transparent" />
 
-                <h1 className="text-4xl font-black leading-[1.2] tracking-tight text-black sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
-                  کیفیتی که
-                  <br />
-                  <span className="text-blue-600">اعتماد می‌سازد</span>
-                </h1>
+          <div className="relative z-10 mx-auto flex min-h-[calc(100vh-7rem)] max-w-7xl items-center px-5 py-14 sm:px-8 sm:py-16 lg:px-10">
+            <motion.div initial={{ opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="ml-auto w-full max-w-3xl text-center lg:text-right">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/90 px-4 py-2 shadow-sm backdrop-blur-xl">
+                <span className="h-2 w-2 rounded-full bg-blue-600 shadow-md shadow-blue-500/40" />
 
-                <p className="mt-6 max-w-xl text-sm leading-8 text-gray-600 sm:text-base sm:leading-9 lg:text-lg">
-                  ارائه انواع تینر، حلال‌ها و محصولات شیمیایی با کیفیت مناسب برای مصارف صنعتی، کارگاهی و تخصصی.
-                </p>
+                <span className="text-xs font-medium text-blue-700 sm:text-sm">REZIN TURK</span>
+              </div>
+              <h1 className="text-4xl font-black leading-[1.2] tracking-tight text-[#071936] sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
+                راهکارهای حرفه‌ای
+                <br />
+                <span className="text-blue-600">صنایع شیمیایی حبیبی</span>
+              </h1>
 
-                <div className="mt-7 flex flex-wrap justify-center gap-3 sm:mt-9 sm:gap-4 lg:justify-end">
-                  <a
-                    href="/products"
-                    className="rounded-full bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-1 hover:bg-blue-700 sm:px-7"
-                  >
-                    مشاهده محصولات
-                  </a>
+              <p className="mx-auto  mt-7 max-w-2xl text-sm leading-8 text-slate-600 sm:text-base sm:leading-9 lg:mx-0  lg:text-lg">
+                ارائه انواع تینر، حلال‌ها و محصولات شیمیایی برای مصارف صنعتی، کارگاهی و تخصصی با تمرکز بر کیفیت و تأمین مطمئن.
+              </p>
 
-                  <a href="/contact" className="rounded-full border border-gray-200 bg-white px-6 py-3.5 text-sm font-semibold text-black transition hover:border-blue-600 hover:text-blue-600 sm:px-7">
-                    تماس با ما
-                  </a>
-                </div>
+              <div className="mt-8 flex flex-wrap justify-center gap-3 sm:mt-10 lg:justify-start">
+                <a
+                  href="/products"
+                  className="group flex items-center gap-3 rounded-2xl bg-blue-600 px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-blue-600/20 transition-all duration-300 hover:-translate-y-1 hover:bg-blue-700 sm:px-7 sm:py-4"
+                >
+                  مشاهده محصولات
+                  <FaArrowLeft className="text-xs transition-transform duration-300 group-hover:-translate-x-1" />
+                </a>
 
-                <div className="mt-9 flex justify-center gap-5 sm:mt-10 sm:gap-8 lg:justify-end">
-                  <div className="text-center lg:text-right">
-                    <span className="block text-xl font-bold text-blue-600 sm:text-2xl">100%</span>
-
-                    <span className="text-[11px] text-gray-500 sm:text-sm">کیفیت و دقت</span>
-                  </div>
-
-                  <div className="h-10 w-px bg-gray-200" />
-
-                  <div className="text-center lg:text-right">
-                    <span className="block text-xl font-bold text-blue-600 sm:text-2xl">4+</span>
-
-                    <span className="text-[11px] text-gray-500 sm:text-sm">محصول اصلی</span>
-                  </div>
-
-                  <div className="h-10 w-px bg-gray-200" />
-
-                  <div className="text-center lg:text-right">
-                    <span className="block text-xl font-bold text-blue-600 sm:text-2xl">24/7</span>
-
-                    <span className="text-[11px] text-gray-500 sm:text-sm">پشتیبانی</span>
-                  </div>
-                </div>
+                <a
+                  href="/contact"
+                  className="rounded-2xl border border-blue-100 bg-white/95 px-6 py-3.5 text-sm font-bold text-[#071936] shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-blue-600 hover:text-blue-600 sm:px-7 sm:py-4"
+                >
+                  ارتباط با ما
+                </a>
               </div>
 
-              <div className="order-1 flex w-full items-center justify-center lg:order-2">
-                <div className="relative h-65 w-65 sm:h-90 sm:w-90 md:h-102.5 md:w-102.5 lg:h-125 lg:w-125">
-                  <div className="absolute inset-0 rounded-full bg-blue-600" />
+              <div className="mt-10 grid max-w-2xl grid-cols-3 gap-3 border-t border-slate-200/90 pt-7 sm:mt-12 sm:gap-6 sm:pt-8">
+                <div>
+                  <span className="block text-xl font-black text-[#071936] sm:text-3xl">20+</span>
 
-                  <div className="absolute inset-4 rounded-full border border-white/20 sm:inset-7" />
+                  <span className="mt-1 block text-[10px] text-slate-500 sm:text-xs">تنوع محصول</span>
+                </div>
 
-                  <div className="absolute -right-3 -top-3 h-16 w-16 rounded-full border border-blue-200 sm:-right-6 sm:-top-6 sm:h-28 sm:w-28" />
+                <div className="border-x border-slate-200/90">
+                  <span className="block text-xl font-black text-[#071936] sm:text-3xl">100%</span>
 
-                  <div className="absolute -bottom-4 -left-4 h-24 w-24 rounded-full border border-blue-100 sm:-bottom-8 sm:-left-8 sm:h-36 sm:w-36" />
+                  <span className="mt-1 block text-[10px] text-slate-500 sm:text-xs">تمرکز بر کیفیت</span>
+                </div>
 
-                  <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-white sm:px-8">
-                    <span className="text-[10px] tracking-[4px] text-blue-100 sm:text-sm sm:tracking-[5px]">REZIN</span>
+                <div>
+                  <span className="block text-xl font-black text-[#071936] sm:text-3xl">24/7</span>
 
-                    <h2 className="mt-2 text-4xl font-black sm:text-6xl md:text-7xl lg:text-8xl">TURK</h2>
-
-                    <div className="mt-4 h-px w-12 bg-white/50 sm:mt-5 sm:w-16" />
-
-                    <p className="mt-4 text-[11px] leading-6 text-blue-50 sm:mt-5 sm:text-sm sm:leading-7">
-                      راهکارهای مطمئن برای
-                      <br />
-                      نیازهای شیمیایی شما
-                    </p>
-                  </div>
-
-                  <motion.div
-                    animate={{ y: [0, -10, 0, 10, 0] }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="absolute -bottom-3 right-1 rounded-2xl border border-gray-100 bg-white px-3 py-2.5 shadow-2xl sm:-bottom-5 sm:-right-5 sm:px-5 sm:py-4"
-                  >
-                    <p className="text-[11px] font-bold text-black sm:text-sm">محصولات متنوع</p>
-
-                    <p className="mt-1 text-[9px] text-gray-500 sm:text-xs">کیفیت قابل اعتماد</p>
-                  </motion.div>
+                  <span className="mt-1 block text-[10px] text-slate-500 sm:text-xs">پاسخگویی</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
-
-        <section className="bg-white px-3 py-8 sm:px-6 sm:py-12 lg:px-10">
+        <section className="bg-white px-3 py-6 sm:px-6 sm:py-8 lg:px-10">
           <div className="mx-auto max-w-7xl">
-            <div className="mb-6 text-center sm:mb-8">
-              <span className="text-xs font-semibold tracking-[3px] text-blue-600 sm:text-sm">REZIN TURK</span>
-
-              <div className="flex flex-col items-center justify-center px-3 py-5">
-                <div className="words space-y-2 px-5 py-3">
-                  <h1 className="word text-2xl sm:text-3xl">تینر فوری</h1>
-
-                  <h1 className="word text-2xl sm:text-3xl">تینر روغنی</h1>
-
-                  <h1 className="word text-2xl sm:text-3xl">جوهر نمک</h1>
-
-                  <h1 className="word text-2xl sm:text-3xl">فروشگاه رزین ترک</h1>
-                </div>
-              </div>
-
-              <p className="mx-auto mt-2 max-w-xl text-xs leading-7 text-gray-500 sm:text-sm">با محصولات منتخب Rezin Turk آشنا شوید و اطلاعات بیشتری درباره محصولات مورد نیاز خود به دست آورید.</p>
-            </div>
-
-            <div className="relative overflow-hidden rounded-[22px] bg-blue-50 shadow-xl sm:rounded-[32px]">
-              <div className="relative h-57.5 w-full sm:h-90 md:h-107.5 lg:h-150 xl:h-155">
+            <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-lg sm:rounded-3xl">
+              <div className="relative h-112.5 sm:h-130 lg:h-150 ...">
                 {banners.map((banner, index) => (
-                  <div key={banner.id} className={`absolute inset-0 transition-opacity duration-700 ${currentSlide === index ? "z-10 opacity-100" : "pointer-events-none opacity-0"}`}>
-                    <img src={banner.image} alt="" className="h-full w-full object-cover object-center" />
-                  </div>
+                  <img
+                    key={banner.id}
+                    src={banner.image}
+                    alt=""
+                    className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ${currentSlide === index ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                  />
                 ))}
-
                 <button
                   type="button"
                   onClick={prevSlide}
-                  aria-label="اسلاید قبلی"
-                  className="absolute left-2 top-1/2 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-blue-600 shadow-md transition hover:bg-blue-600 hover:text-white sm:left-4 sm:h-11 sm:w-11"
+                  aria-label="بنر قبلی"
+                  className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-blue-600 shadow-lg transition hover:bg-blue-600 hover:text-white sm:left-5 sm:h-11 sm:w-11"
                 >
-                  <FaChevronLeft className="text-[10px] sm:text-sm" />
+                  <FaChevronLeft className="text-xs sm:text-sm" />
                 </button>
-
                 <button
                   type="button"
                   onClick={nextSlide}
-                  aria-label="اسلاید بعدی"
-                  className="absolute right-2 top-1/2 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-blue-600 shadow-md transition hover:bg-blue-600 hover:text-white sm:right-4 sm:h-11 sm:w-11"
+                  aria-label="بنر بعدی"
+                  className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-blue-600 shadow-lg transition hover:bg-blue-600 hover:text-white sm:right-5 sm:h-11 sm:w-11"
                 >
-                  <FaChevronRight className="text-[10px] sm:text-sm" />
+                  <FaChevronRight className="text-xs sm:text-sm" />
                 </button>
-
-                <div className="absolute bottom-2 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1.5 sm:bottom-4 sm:gap-2">
+                <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
                   {banners.map((banner, index) => (
                     <button
                       key={banner.id}
                       type="button"
                       onClick={() => setCurrentSlide(index)}
                       aria-label={`اسلاید ${index + 1}`}
-                      className={`h-1.5 rounded-full transition-all duration-300 sm:h-2 ${currentSlide === index ? "w-7 bg-blue-400 sm:w-9" : "w-1.5 bg-white/70 hover:bg-white sm:w-2"}`}
+                      className={`h-2 rounded-full transition-all duration-300 ${currentSlide === index ? "w-8 bg-blue-600" : "w-2 bg-white/90 hover:bg-blue-300"}`}
                     />
                   ))}
                 </div>
@@ -295,90 +183,165 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-gray-50 py-20 sm:py-24">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-            <div className="mx-auto max-w-3xl text-center">
-              <div className="mb-8 mt-6 sm:mb-10 sm:mt-8">
-                <div className="flex items-center justify-center gap-1 pt-3 sm:gap-2 lg:gap-3 sm:pt-4" dir="ltr">
-                  <TextRoll center className="text-4xl font-extrabold tracking-[0.08em] text-[#071936] sm:text-5xl lg:text-6xl">
-                    REZIN
-                  </TextRoll>
+        <section className="bg-white px-4 py-10 sm:px-6 sm:py-14 lg:px-10">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="group rounded-3xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-100 hover:shadow-xl sm:p-7">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition-all group-hover:bg-blue-600 group-hover:text-white">
+                    <FaFlask />
+                  </div>
 
-                  <TextRoll center className="text-4xl font-extrabold tracking-[0.08em] text-[#071936] sm:text-5xl lg:text-6xl">
-                    TURK
-                  </TextRoll>
+                  <div>
+                    <h3 className="font-bold text-[#071936]">تنوع محصولات</h3>
+
+                    <p className="mt-2 text-xs leading-6 text-gray-500 sm:text-sm">مجموعه‌ای از تینر، حلال و محصولات شیمیایی</p>
+                  </div>
                 </div>
               </div>
 
-              <p className="mx-auto max-w-2xl text-sm leading-8 text-gray-500 sm:text-base sm:leading-9">انتخابی مطمئن برای تهیه محصولات شیمیایی و حلال‌های مورد نیاز شما.</p>
-            </div>
+              <div className="group rounded-3xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-100 hover:shadow-xl sm:p-7">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition-all group-hover:bg-blue-600 group-hover:text-white">
+                    <FaShippingFast />
+                  </div>
 
-            <div className="mt-12 grid grid-cols-2 gap-3 sm:mt-16 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-              <div className="group rounded-3xl border border-gray-100 bg-white p-5 text-center transition-all duration-300 hover:-translate-y-2 hover:border-blue-200 hover:shadow-xl sm:p-8">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white sm:h-14 sm:w-14">
-                  ✓
+                  <div>
+                    <h3 className="font-bold text-[#071936]">تأمین و ارسال</h3>
+
+                    <p className="mt-2 text-xs leading-6 text-gray-500 sm:text-sm">ثبت سفارش و هماهنگی برای ارسال محصولات</p>
+                  </div>
                 </div>
-
-                <h3 className="mt-5 text-base font-bold text-black sm:text-xl">کیفیت مطمئن</h3>
-
-                <p className="mt-3 text-xs leading-6 text-gray-500 sm:text-sm sm:leading-7">ارائه محصولاتی با کیفیت مناسب و قابل اعتماد.</p>
               </div>
 
-              <div className="group rounded-3xl border border-gray-100 bg-white p-5 text-center transition-all duration-300 hover:-translate-y-2 hover:border-blue-200 hover:shadow-xl sm:p-8">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white sm:h-14 sm:w-14">
-                  ◇
+              <div className="group rounded-3xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-100 hover:shadow-xl sm:p-7">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition-all group-hover:bg-blue-600 group-hover:text-white">
+                    <FaIndustry />
+                  </div>
+
+                  <div>
+                    <h3 className="font-bold text-[#071936]">مناسب کسب‌وکارها</h3>
+
+                    <p className="mt-2 text-xs leading-6 text-gray-500 sm:text-sm">مناسب استفاده‌های صنعتی، کارگاهی و تخصصی</p>
+                  </div>
                 </div>
-
-                <h3 className="mt-5 text-base font-bold text-black sm:text-xl">تأمین مطمئن</h3>
-
-                <p className="mt-3 text-xs leading-6 text-gray-500 sm:text-sm sm:leading-7">تلاش برای تأمین منظم محصولات مورد نیاز مشتریان.</p>
-              </div>
-
-              <div className="group rounded-3xl border border-gray-100 bg-white p-5 text-center transition-all duration-300 hover:-translate-y-2 hover:border-blue-200 hover:shadow-xl sm:p-8">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white sm:h-14 sm:w-14">
-                  $
-                </div>
-
-                <h3 className="mt-5 text-base font-bold text-black sm:text-xl">قیمت رقابتی</h3>
-
-                <p className="mt-3 text-xs leading-6 text-gray-500 sm:text-sm sm:leading-7">ارائه قیمت مناسب برای خریدی اقتصادی و مطمئن.</p>
-              </div>
-
-              <div className="group rounded-3xl border border-gray-100 bg-white p-5 text-center transition-all duration-300 hover:-translate-y-2 hover:border-blue-200 hover:shadow-xl sm:p-8">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white sm:h-14 sm:w-14">
-                  +
-                </div>
-
-                <h3 className="mt-5 text-base font-bold text-black sm:text-xl">پشتیبانی</h3>
-
-                <p className="mt-3 text-xs leading-6 text-gray-500 sm:text-sm sm:leading-7">همراهی برای انتخاب بهتر محصولات.</p>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="bg-white py-20 sm:py-24">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-            <div className="text-center">
-              <span className="text-xs font-semibold tracking-[3px] text-blue-600 sm:text-sm">PRODUCTS</span>
+        <section className="bg-[#f6f8fc] px-3 py-12 sm:px-6 sm:py-16 lg:px-10">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-7 flex flex-col items-start justify-between gap-4 sm:mb-9 sm:flex-row sm:items-end">
+              <div>
+                <span className="text-[10px] font-bold tracking-[3px] text-blue-600 sm:text-xs">REZIN TURK</span>
 
-              <h2 className="mt-3 text-3xl font-bold text-black sm:text-4xl lg:text-5xl">محصولات ما</h2>
+                <h2 className="mt-2 text-2xl font-black text-[#071936] sm:text-4xl">نگاهی به محصولات</h2>
 
-              <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-gray-500">محصولات اصلی Rezin Turk را مشاهده کنید.</p>
+                <p className="mt-2 max-w-xl text-xs leading-6 text-gray-500 sm:text-sm">بخشی از محصولات فروشگاه را مشاهده کنید و برای بررسی کامل، وارد صفحه محصولات شوید.</p>
+              </div>
+
+              <a
+                href="/products"
+                className="group flex items-center gap-2 rounded-xl border border-blue-100 bg-white px-4 py-2.5 text-xs font-bold text-blue-600 transition hover:border-blue-600 hover:bg-blue-600 hover:text-white sm:px-5 sm:py-3 sm:text-sm"
+              >
+                مشاهده همه محصولات
+                <FaArrowLeft className="transition-transform group-hover:-translate-x-1" />
+              </a>
             </div>
 
-            <div className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3 lg:gap-8">
-              {productImages.map((product) => (
-                <div key={product.id} className="group overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <div className="relative flex h-56 items-center justify-center overflow-hidden bg-blue-50 sm:h-64 lg:h-72">
-                    <img src={product.image} alt={product.title} className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105 sm:p-4" />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {productImages.map((product, index) => (
+                <motion.a
+                  key={product.id}
+                  href={`/products/${product.id}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.08,
+                  }}
+                  className="group overflow-hidden rounded-[28px] border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-blue-100 hover:shadow-2xl"
+                >
+                  <div className="relative h-65 overflow-hidden bg-linaer-to-br from-blue-50 to-slate-50 sm:h-75">
+                    <div className="absolute right-4 top-4 z-10 rounded-full border border-white/70 bg-white/80 px-3 py-1.5 text-[10px] font-bold text-blue-600 shadow-sm backdrop-blur">
+                      REZIN TURK
+                    </div>
+
+                    <img src={product.image} alt={product.title} className="h-full w-full object-contain p-8 transition-transform duration-700 group-hover:scale-110 sm:p-10" />
                   </div>
 
-                  <div className="p-4 text-center sm:p-5">
-                    <h3 className="text-sm font-bold text-[#071936] sm:text-base">{product.title}</h3>
+                  <div className="p-5 sm:p-6">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <h3 className="text-base font-black text-[#071936] sm:text-lg">{product.title}</h3>
+
+                        <p className="mt-2 text-xs leading-6 text-gray-500 sm:text-sm">{product.description}</p>
+                      </div>
+
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 transition-all group-hover:bg-blue-600 group-hover:text-white">
+                        <FaArrowLeft className="text-xs" />
+                      </div>
+                    </div>
+                  </div>
+                </motion.a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white px-4 py-14 sm:px-6 sm:py-20 lg:px-10">
+          <div className="mx-auto max-w-7xl">
+            <div className="relative overflow-hidden rounded-[32px] border border-blue-100 bg-blue-50">
+              <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-blue-200/50 blur-3xl" />
+
+              <div className="absolute -bottom-32 -right-20 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
+
+              <div className="relative grid items-center gap-8 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1fr_auto] lg:px-14 lg:py-14">
+                <div>
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
+                      <FaFlask />
+                    </div>
+
+                    <span className="text-xs font-bold text-blue-600">راهنمای انتخاب محصول</span>
+                  </div>
+
+                  <h2 className="text-2xl font-black leading-tight text-[#071936] sm:text-3xl lg:text-4xl">
+                    برای انتخاب محصول مناسب
+                    <br className="hidden sm:block" />
+                    نیاز به راهنمایی دارید؟
+                  </h2>
+
+                  <p className="mt-4 max-w-2xl text-xs leading-7 text-gray-500 sm:text-sm sm:leading-8">
+                    اگر برای انتخاب تینر، حلال یا سایر محصولات شیمیایی مطمئن نیستید، با ما در ارتباط باشید تا بر اساس نیاز و کاربرد شما راهنمایی‌تان کنیم.
+                  </p>
+
+                  <div className="mt-5 flex flex-wrap gap-4">
+                    <div className="flex items-center gap-2 text-xs font-bold text-gray-600">
+                      <FaCheckCircle className="text-blue-600" />
+                      مشاوره برای انتخاب محصول
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs font-bold text-gray-600">
+                      <FaCheckCircle className="text-blue-600" />
+                      پاسخگویی به سوالات
+                    </div>
                   </div>
                 </div>
-              ))}
+
+                <div className="flex">
+                  <a
+                    href="/contact"
+                    className="flex items-center justify-center gap-2 rounded-2xl border border-blue-200 bg-white px-8 py-4 text-sm font-bold text-blue-600 transition hover:border-blue-600 hover:bg-blue-600 hover:text-white"
+                  >
+                    <FaPhoneAlt className="text-xs" />
+                    تماس با ما
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>

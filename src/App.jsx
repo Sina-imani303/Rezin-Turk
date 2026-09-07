@@ -8,7 +8,11 @@ import Login from "./pages/Login/Login";
 import Cart from "./pages/Cart/Cart";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import Checkout from "./pages/Checkout/Checkout";
-
+import Account from "./pages/Account/Account";
+import Orders from "./pages/Account/Orders";
+import OrderDetails from "./pages/Account/OrderDetails";
+import Addresses from "./pages/Account/Addresses";
+import PurchaseHistory from "./pages/Account/PurchaseHistory";
 function App() {
   return (
     <>
@@ -22,6 +26,11 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/account/orders" element={<Orders />} />
+        <Route path="/account/orders/:id" element={<OrderDetails />} />
+        <Route path="/account/addresses" element={<Addresses />} />
+        <Route path="/account/history" element={<PurchaseHistory />} />
       </Routes>
     </>
   );

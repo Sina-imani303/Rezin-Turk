@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Register() {
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -29,7 +31,7 @@ export default function Register() {
   };
 
   return (
-    <div className=" min-h-screen bg-white text-black " dir="rtl">
+    <div className="min-h-screen bg-white text-black" dir="rtl">
       <main className="min-h-screen pt-32 pb-16 px-5 sm:px-8 flex items-center justify-center">
         <div className="w-full max-w-md bg-white rounded-4xl border border-blue-100 shadow-xl p-6 sm:p-8 lg:p-10">
           <Link to="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition duration-300">
@@ -105,18 +107,30 @@ export default function Register() {
             <div>
               <label className="block mb-2 text-sm font-semibold text-gray-700">رمز عبور</label>
 
-              <input
-                type="password"
-                value={form.password}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    password: e.target.value,
-                  })
-                }
-                placeholder="رمز عبور"
-                className="w-full h-12 rounded-2xl border border-blue-100 bg-gray-50 px-4 text-black outline-none placeholder:text-gray-400 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition duration-300"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={form.password}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      password: e.target.value,
+                    })
+                  }
+                  placeholder="رمز عبور"
+                  dir="ltr"
+                  className="w-full h-12 rounded-2xl border border-blue-100 bg-gray-50 px-4 pl-12 text-black outline-none placeholder:text-gray-400 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition duration-300"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={showPassword ? "مخفی کردن رمز عبور" : "نمایش رمز عبور"}
+                  className="absolute left-0 top-0 h-12 w-12 flex items-center justify-center text-gray-400 hover:text-blue-600 transition"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
             </div>
 
             <button type="submit" className="w-full h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg hover:shadow-blue-200 transition duration-300">

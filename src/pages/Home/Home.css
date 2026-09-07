@@ -1,7 +1,7 @@
 .words {
   position: relative;
   display: inline-block;
-  height: 20px;
+  height: 33px;
   overflow: hidden;
 }
 .word {

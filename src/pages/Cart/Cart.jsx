@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaArrowRight, FaMinus, FaPlus, FaTrash, FaShoppingBag, FaFileInvoice } from "react-icons/fa";
 import jsPDF from "jspdf";
@@ -6,13 +6,57 @@ import html2canvas from "html2canvas-pro";
 
 import Navbar from "../../components/Navbar";
 import useCart from "../../context/useCart";
+import { getMediaUrl } from "../../api/api";
 
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, totalAmount } = useCart();
 
   const invoiceRef = useRef(null);
 
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItems = cartItems.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+
+  const getTitle = (item) => {
+    return item?.title || item?.name || "محصول";
+  };
+
+  const getUnit = (item) => {
+    const units = {
+      liter: "لیتر",
+      gallon: "گالون",
+      can: "حلب",
+      chemical: "شیمیایی",
+    };
+
+    return units[item?.unit] || item?.unit || "محصول";
+  };
+
+  const getImage = (item) => {
+    return getMediaUrl(item?.main_image || item?.image);
+  };
+
+  const [invoiceNumber] = useState(() => {
+    if (typeof window === "undefined") {
+      return 1000;
+    }
+
+    const savedNumber = Number(localStorage.getItem("rezin_turk_invoice_number"));
+
+    if (savedNumber >= 1000 && savedNumber <= 9999) {
+      return savedNumber;
+    }
+
+    const newNumber = Math.floor(1000 + Math.random() * 9000);
+
+    localStorage.setItem("rezin_turk_invoice_number", String(newNumber));
+
+    return newNumber;
+  });
+
+  const invoiceDate = new Intl.DateTimeFormat("fa-IR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
 
   const downloadInvoice = async () => {
     if (!invoiceRef.current || cartItems.length === 0) {
@@ -57,7 +101,7 @@ export default function Cart() {
         heightLeft -= pageHeight;
       }
 
-      pdf.save("rezin-turk-invoice.pdf");
+      pdf.save(`فاکتور-${invoiceNumber}.pdf`);
     } catch (error) {
       console.error("Invoice Error:", error);
     }
@@ -68,31 +112,31 @@ export default function Cart() {
       <div className="min-h-screen bg-white text-black" dir="rtl">
         <Navbar />
 
-        <main className="pt-32 pb-16 px-4 sm:px-6 lg:px-10">
-          <div className="max-w-7xl mx-auto">
+        <main className="px-3 pb-12 pt-28 sm:px-6 sm:pb-16 sm:pt-32 lg:px-10">
+          <div className="mx-auto max-w-7xl">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <span className="text-xs sm:text-sm font-semibold text-blue-600">REZIN TURK</span>
+                <span className="text-[10px] font-semibold text-blue-600 sm:text-sm">REZIN TURK</span>
 
-                <h1 className="mt-2 sm:mt-3 text-3xl sm:text-5xl font-bold text-[#071936]">سبد خرید</h1>
+                <h1 className="mt-1.5 text-2xl font-bold text-[#071936] sm:mt-3 sm:text-5xl">سبد خرید</h1>
               </div>
 
-              <Link to="/products" className="hidden sm:inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition">
+              <Link to="/products" className="hidden items-center gap-2 text-sm text-gray-500 transition hover:text-blue-600 sm:inline-flex">
                 ادامه خرید
                 <FaArrowRight />
               </Link>
             </div>
 
-            <div className="mt-7 sm:mt-10 min-h-100 sm:min-h-115 rounded-[28px] sm:rounded-4xl border border-blue-100 bg-gray-50 flex flex-col items-center justify-center text-center px-5">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-blue-100 flex items-center justify-center">
-                <FaShoppingBag className="text-3xl sm:text-4xl text-blue-600" />
+            <div className="mt-5 flex min-h-80 flex-col items-center justify-center rounded-2xl border border-blue-100 bg-gray-50 px-4 text-center sm:mt-10 sm:min-h-115 sm:rounded-4xl">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 sm:h-24 sm:w-24">
+                <FaShoppingBag className="text-2xl text-blue-600 sm:text-4xl" />
               </div>
 
-              <h2 className="mt-6 sm:mt-8 text-xl sm:text-2xl font-bold text-[#071936]">سبد خرید شما خالی است</h2>
+              <h2 className="mt-5 text-lg font-bold text-[#071936] sm:mt-8 sm:text-2xl">سبد خرید شما خالی است</h2>
 
-              <p className="mt-3 text-sm text-gray-500">هنوز محصولی به سبد خرید خود اضافه نکرده‌اید.</p>
+              <p className="mt-2 text-xs text-gray-500 sm:text-sm">هنوز محصولی به سبد خرید خود اضافه نکرده‌اید.</p>
 
-              <Link to="/products" className="mt-6 sm:mt-7 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-700 px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base text-white font-bold transition">
+              <Link to="/products" className="mt-5 rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-bold text-white transition hover:bg-blue-700 sm:mt-7 sm:rounded-2xl sm:px-8 sm:py-4 sm:text-base">
                 مشاهده محصولات
               </Link>
             </div>
@@ -106,100 +150,113 @@ export default function Cart() {
     <div className="min-h-screen bg-white text-black" dir="rtl">
       <Navbar />
 
-      <main className="pt-32 pb-16 sm:pb-20 px-3 sm:px-6 lg:px-10">
-        <div className="max-w-7xl mx-auto">
+      <main className="px-3 pb-12 pt-28 sm:px-6 sm:pb-20 sm:pt-32 lg:px-10">
+        <div className="mx-auto max-w-7xl">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <span className="text-xs sm:text-sm font-semibold text-blue-600">REZIN TURK</span>
+              <span className="text-[10px] font-semibold text-blue-600 sm:text-sm">REZIN TURK</span>
 
-              <h1 className="mt-2 sm:mt-3 text-3xl sm:text-5xl font-bold text-[#071936]">سبد خرید</h1>
+              <h1 className="mt-1.5 text-2xl font-bold text-[#071936] sm:mt-3 sm:text-5xl">سبد خرید</h1>
 
-              <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-500">{totalItems.toLocaleString("fa-IR")} عدد محصول در سبد خرید</p>
+              <p className="mt-1.5 text-[10px] text-gray-500 sm:mt-3 sm:text-sm">{totalItems.toLocaleString("fa-IR")} عدد محصول در سبد خرید</p>
             </div>
 
-            <Link to="/products" className="hidden sm:inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition">
+            <Link to="/products" className="hidden items-center gap-2 text-sm text-gray-500 transition hover:text-blue-600 sm:inline-flex">
               ادامه خرید
               <FaArrowRight />
             </Link>
           </div>
 
-          <div className="mt-7 sm:mt-10 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-5 sm:gap-6">
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-1">
+          <div className="mt-5 grid grid-cols-1 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-[1fr_360px]">
+            <div className="grid grid-cols-1 gap-3 sm:gap-4">
               {cartItems.map((item) => {
-                const itemTotal = item.price * item.quantity;
+                const itemPrice = Number(item?.price || 0);
+                const itemQuantity = Number(item?.quantity || 0);
+                const itemTotal = itemPrice * itemQuantity;
+
+                const title = getTitle(item);
+                const unit = getUnit(item);
+                const image = getImage(item);
 
                 return (
-                  <div key={item.id} className="rounded-2xl sm:rounded-3xl border border-blue-100 bg-white p-2.5 sm:p-5 shadow-sm">
-                    <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-5">
-                      <div className="w-full h-28 sm:w-36 sm:h-36 rounded-xl sm:rounded-2xl overflow-hidden bg-blue-50 shrink-0">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  <div key={item.id} className="rounded-2xl border border-blue-100 bg-white p-3 shadow-sm sm:rounded-3xl sm:p-5">
+                    <div className="flex flex-row gap-3 sm:gap-5">
+                      <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-blue-50 sm:h-36 sm:w-36 sm:rounded-2xl">
+                        <img
+                          src={image}
+                          alt={title}
+                          className="h-full w-full object-contain p-1.5 sm:p-2"
+                          onError={(e) => {
+                            e.currentTarget.src = "/products/placeholder.jpg";
+                          }}
+                        />
                       </div>
 
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-2 sm:gap-4">
                           <div className="min-w-0">
-                            <h2 className="text-sm sm:text-lg font-bold text-[#071936] truncate">{item.name}</h2>
+                            <h2 className="truncate text-sm font-bold text-[#071936] sm:text-lg">{title}</h2>
 
-                            <p className="mt-1 text-[10px] sm:text-sm text-gray-400">{item.category}</p>
+                            <p className="mt-1 text-[9px] text-gray-400 sm:text-sm">{unit}</p>
                           </div>
 
                           <button
                             type="button"
                             onClick={() => removeFromCart(item.id)}
-                            className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition shrink-0"
+                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white sm:h-10 sm:w-10 sm:rounded-xl"
                           >
-                            <FaTrash className="text-[10px] sm:text-sm" />
+                            <FaTrash className="text-[9px] sm:text-sm" />
                           </button>
                         </div>
 
-                        <div className="mt-2 sm:mt-4 flex flex-wrap gap-1.5">
-                          <span className="rounded-lg sm:rounded-xl bg-blue-50 px-2 sm:px-3 py-1.5 sm:py-2 text-[9px] sm:text-xs font-semibold text-blue-600">{item.type}</span>
+                        <div className="mt-2 flex flex-wrap gap-1.5 sm:mt-4">
+                          <span className="rounded-lg bg-blue-50 px-2 py-1 text-[8px] font-semibold text-blue-600 sm:rounded-xl sm:px-3 sm:py-2 sm:text-xs">نوع فروش: {unit}</span>
 
-                          <span className="rounded-lg sm:rounded-xl bg-gray-50 px-2 sm:px-3 py-1.5 sm:py-2 text-[9px] sm:text-xs font-semibold text-gray-600">{item.unit}</span>
+                          <span className="rounded-lg bg-gray-50 px-2 py-1 text-[8px] font-semibold text-gray-600 sm:rounded-xl sm:px-3 sm:py-2 sm:text-xs">واحد: {unit}</span>
                         </div>
 
-                        <div className="mt-3 sm:mt-5">
-                          <p className="text-[9px] sm:text-xs text-gray-400 mb-1.5 sm:mb-2">تعداد</p>
-
-                          <div className="flex items-center gap-1.5 sm:gap-3">
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl border border-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition"
-                            >
-                              <FaMinus className="text-[9px] sm:text-xs" />
-                            </button>
-
-                            <span className="w-6 sm:w-8 text-center text-xs sm:text-base font-bold">{item.quantity.toLocaleString("fa-IR")}</span>
-
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center transition"
-                            >
-                              <FaPlus className="text-[9px] sm:text-xs" />
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="mt-3 sm:mt-5 flex items-end justify-between gap-2">
+                        <div className="mt-2.5 flex items-center justify-between gap-2 sm:mt-5">
                           <div>
-                            <p className="text-[9px] sm:text-xs text-gray-400">قیمت واحد</p>
+                            <p className="mb-1 text-[8px] text-gray-400 sm:text-xs">تعداد</p>
 
-                            <p className="mt-1 text-[10px] sm:text-sm font-semibold text-gray-600 whitespace-nowrap">
-                              {item.price.toLocaleString("fa-IR")}
-                              <span className="mr-1">تومان</span>
-                            </p>
+                            <div className="flex items-center gap-1 sm:gap-2">
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(item.id, itemQuantity - 1)}
+                                className="flex h-7 w-7 items-center justify-center rounded-lg border border-blue-100 text-blue-600 transition hover:bg-blue-600 hover:text-white sm:h-9 sm:w-9 sm:rounded-xl"
+                              >
+                                <FaMinus className="text-[8px] sm:text-xs" />
+                              </button>
+
+                              <span className="w-5 text-center text-xs font-bold sm:w-8 sm:text-base">{itemQuantity.toLocaleString("fa-IR")}</span>
+
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(item.id, itemQuantity + 1)}
+                                className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-white transition hover:bg-blue-700 sm:h-9 sm:w-9 sm:rounded-xl"
+                              >
+                                <FaPlus className="text-[8px] sm:text-xs" />
+                              </button>
+                            </div>
                           </div>
 
                           <div className="text-left">
-                            <p className="text-[9px] sm:text-xs text-gray-400">مبلغ کل</p>
+                            <p className="text-[8px] text-gray-400 sm:text-xs">مبلغ کل</p>
 
-                            <p className="mt-1 text-xs sm:text-xl font-bold text-blue-600 whitespace-nowrap">
+                            <p className="mt-1 whitespace-nowrap text-xs font-bold text-blue-600 sm:text-xl">
                               {itemTotal.toLocaleString("fa-IR")}
-                              <span className="mr-1 text-[9px] sm:text-sm">تومان</span>
+                              <span className="mr-1 text-[8px] sm:text-sm">تومان</span>
                             </p>
                           </div>
+                        </div>
+
+                        <div className="mt-2.5 sm:mt-4">
+                          <p className="mb-1 text-[8px] text-gray-400 sm:text-xs">قیمت واحد</p>
+
+                          <p className="whitespace-nowrap text-[10px] font-semibold text-gray-600 sm:text-sm">
+                            {itemPrice.toLocaleString("fa-IR")}
+                            <span className="mr-1">تومان</span>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -208,10 +265,10 @@ export default function Cart() {
               })}
             </div>
 
-            <div className="lg:sticky lg:top-28 h-fit rounded-2xl sm:rounded-3xl border border-blue-100 bg-gray-50 p-4 sm:p-6">
-              <h2 className="text-lg sm:text-xl font-bold text-[#071936]">خلاصه سفارش</h2>
+            <div className="h-fit rounded-2xl border border-blue-100 bg-gray-50 p-4 sm:sticky sm:top-28 sm:rounded-3xl sm:p-6">
+              <h2 className="text-lg font-bold text-[#071936] sm:text-xl">خلاصه سفارش</h2>
 
-              <div className="mt-5 sm:mt-6 space-y-4">
+              <div className="mt-5 space-y-4 sm:mt-6">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-500">تعداد محصولات</span>
 
@@ -223,90 +280,112 @@ export default function Cart() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">جمع کل</span>
 
-                  <span className="text-lg sm:text-xl font-bold text-blue-600">{totalAmount.toLocaleString("fa-IR")} تومان</span>
+                  <span className="text-lg font-bold text-blue-600 sm:text-xl">{Number(totalAmount || 0).toLocaleString("fa-IR")} تومان</span>
                 </div>
               </div>
 
               <Link
                 to="/checkout"
-                className="mt-5 sm:mt-6 w-full min-h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-base font-bold flex items-center justify-center transition"
+                className="mt-5 flex min-h-12 w-full items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white transition hover:bg-blue-700 sm:mt-6 sm:h-14 sm:rounded-2xl sm:text-base"
               >
                 ادامه فرایند خرید
               </Link>
 
               <Link
                 to="/products"
-                className="mt-2.5 sm:mt-3 w-full h-11 sm:h-12 rounded-xl sm:rounded-2xl border border-blue-100 bg-white hover:bg-blue-50 text-[#071936] text-sm font-semibold flex items-center justify-center transition"
+                className="mt-2.5 flex h-11 w-full items-center justify-center rounded-xl border border-blue-100 bg-white text-sm font-semibold text-[#071936] transition hover:bg-blue-50 sm:mt-3 sm:h-12 sm:rounded-2xl"
               >
                 بازگشت به محصولات
               </Link>
             </div>
           </div>
 
-          <section className="mt-10 sm:mt-12">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+          <section className="mt-8 sm:mt-12">
+            <div className="mb-4 flex flex-col gap-3 sm:mb-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <div>
-                <span className="text-xs sm:text-sm font-semibold text-blue-600">REZIN TURK</span>
+                <span className="text-[10px] font-semibold text-blue-600 sm:text-sm">REZIN TURK</span>
 
-                <h2 className="mt-2 text-xl sm:text-2xl font-bold text-[#071936]">فاکتور خرید</h2>
+                <h2 className="mt-1.5 text-lg font-bold text-[#071936] sm:mt-2 sm:text-2xl">فاکتور خرید</h2>
               </div>
 
               <button
                 type="button"
                 onClick={downloadInvoice}
-                className="w-full sm:w-auto h-11 sm:h-12 px-5 sm:px-6 rounded-xl sm:rounded-2xl bg-[#071936] hover:bg-blue-700 text-white text-sm font-bold flex items-center justify-center gap-2 sm:gap-3 transition"
+                className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#071936] px-5 text-xs font-bold text-white transition hover:bg-blue-700 sm:h-12 sm:w-auto sm:gap-3 sm:rounded-2xl sm:px-6 sm:text-sm"
               >
                 <FaFileInvoice />
                 دانلود فاکتور
               </button>
             </div>
 
-            <div ref={invoiceRef} className="bg-white border border-blue-100 rounded-2xl sm:rounded-3xl p-3 sm:p-6 lg:p-10 shadow-sm">
-              <div className="text-center border-b border-gray-200 pb-5 sm:pb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-[#071936]">REZIN TURK</h2>
+            <div ref={invoiceRef} className="rounded-2xl border border-gray-300 bg-white p-3 shadow-sm sm:rounded-3xl sm:p-6 lg:p-10">
+              <div className="border-b-2 border-[#071936] pb-5 sm:pb-7">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="text-right">
+                    <h2 className="text-xl font-bold text-[#071936] sm:text-3xl">REZIN TURK</h2>
 
-                <h3 className="mt-2 sm:mt-3 text-xl sm:text-2xl font-bold text-blue-600">فاکتور خرید</h3>
+                    <p className="mt-1 text-[9px] text-gray-500 sm:text-xs">فروش و عرضه محصولات شیمیایی</p>
+                  </div>
 
-                <p className="mt-2 text-xs sm:text-sm text-gray-500">فاکتور محصولات خریداری شده</p>
+                  <div className="rounded-xl border border-gray-300 px-4 py-3 text-right sm:min-w-56 sm:rounded-2xl sm:px-6 sm:py-4">
+                    <div className="flex items-center justify-between gap-5">
+                      <span className="text-[10px] font-semibold text-gray-500 sm:text-sm">شماره</span>
+
+                      <span className="text-sm font-bold text-[#071936] sm:text-lg" dir="ltr">
+                        {invoiceNumber}
+                      </span>
+                    </div>
+
+                    <div className="my-2 h-px bg-gray-200" />
+
+                    <div className="flex items-center justify-between gap-5">
+                      <span className="text-[10px] font-semibold text-gray-500 sm:text-sm">تاریخ</span>
+
+                      <span className="text-[10px] font-semibold text-[#071936] sm:text-sm">{invoiceDate}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-5 text-center sm:mt-6">
+                  <h3 className="text-lg font-bold text-blue-600 sm:text-2xl">فاکتور خرید</h3>
+                </div>
               </div>
 
-              <div className="hidden sm:block mt-8 overflow-hidden">
+              <div className="mt-8 hidden overflow-hidden sm:block">
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="bg-[#071936] text-white">
-                      <th className="p-3 lg:p-4 text-right text-sm">نام محصول</th>
+                      <th className="w-16 border border-[#071936] p-3 text-center text-sm lg:p-4">ردیف</th>
 
-                      <th className="p-3 lg:p-4 text-right text-sm">کد محصول</th>
+                      <th className="border border-[#071936] p-3 text-right text-sm lg:p-4">نام محصول</th>
 
-                      <th className="p-3 lg:p-4 text-right text-sm">نوع فروش</th>
+                      <th className="border border-[#071936] p-3 text-center text-sm lg:p-4">تعداد</th>
 
-                      <th className="p-3 lg:p-4 text-center text-sm">تعداد</th>
+                      <th className="border border-[#071936] p-3 text-center text-sm lg:p-4">قیمت واحد</th>
 
-                      <th className="p-3 lg:p-4 text-right text-sm">قیمت واحد</th>
-
-                      <th className="p-3 lg:p-4 text-right text-sm">مبلغ</th>
+                      <th className="border border-[#071936] p-3 text-center text-sm lg:p-4">مبلغ</th>
                     </tr>
                   </thead>
 
                   <tbody>
-                    {cartItems.map((item) => {
-                      const itemTotal = item.price * item.quantity;
+                    {cartItems.map((item, index) => {
+                      const itemPrice = Number(item?.price || 0);
+                      const itemQuantity = Number(item?.quantity || 0);
+                      const itemTotal = itemPrice * itemQuantity;
+
+                      const title = getTitle(item);
 
                       return (
                         <tr key={item.id}>
-                          <td className="border border-gray-200 p-3 lg:p-4 font-semibold text-sm">{item.name}</td>
+                          <td className="border border-gray-300 p-3 text-center text-sm font-bold lg:p-4">{(index + 1).toLocaleString("fa-IR")}</td>
 
-                          <td className="border border-gray-200 p-3 lg:p-4 text-sm" dir="ltr">
-                            {item.id}
-                          </td>
+                          <td className="border border-gray-300 p-3 text-right text-sm font-semibold lg:p-4">{title}</td>
 
-                          <td className="border border-gray-200 p-3 lg:p-4 text-sm">{item.type}</td>
+                          <td className="border border-gray-300 p-3 text-center text-sm lg:p-4">{itemQuantity.toLocaleString("fa-IR")}</td>
 
-                          <td className="border border-gray-200 p-3 lg:p-4 text-center text-sm">{item.quantity.toLocaleString("fa-IR")}</td>
+                          <td className="whitespace-nowrap border border-gray-300 p-3 text-center text-sm lg:p-4">{itemPrice.toLocaleString("fa-IR")} تومان</td>
 
-                          <td className="border border-gray-200 p-3 lg:p-4 whitespace-nowrap text-sm">{item.price.toLocaleString("fa-IR")} تومان</td>
-
-                          <td className="border border-gray-200 p-3 lg:p-4 font-bold whitespace-nowrap text-sm">{itemTotal.toLocaleString("fa-IR")} تومان</td>
+                          <td className="whitespace-nowrap border border-gray-300 p-3 text-center text-sm font-bold lg:p-4">{itemTotal.toLocaleString("fa-IR")} تومان</td>
                         </tr>
                       );
                     })}
@@ -314,41 +393,52 @@ export default function Cart() {
                 </table>
               </div>
 
-              <div className="sm:hidden mt-5 space-y-3">
-                {cartItems.map((item) => {
-                  const itemTotal = item.price * item.quantity;
+              <div className="mt-4 space-y-2.5 sm:hidden">
+                {cartItems.map((item, index) => {
+                  const itemPrice = Number(item?.price || 0);
+                  const itemQuantity = Number(item?.quantity || 0);
+                  const itemTotal = itemPrice * itemQuantity;
+
+                  const title = getTitle(item);
 
                   return (
-                    <div key={item.id} className="rounded-xl border border-blue-100 bg-white p-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <h3 className="text-xs font-bold text-[#071936] truncate">{item.name}</h3>
-
-                          <p className="mt-1 text-[9px] text-gray-400 truncate" dir="ltr">
-                            {item.id}
-                          </p>
-                        </div>
-
-                        <span className="shrink-0 rounded-lg bg-blue-50 px-2 py-1 text-[9px] font-semibold text-blue-600">{item.type}</span>
+                    <div key={item.id} className="rounded-xl border border-gray-200 bg-white p-2.5 shadow-sm">
+                      <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                        <span className="text-[8px] font-bold text-gray-400">ردیف {(index + 1).toLocaleString("fa-IR")}</span>
                       </div>
 
-                      <div className="mt-3 grid grid-cols-3 gap-1.5">
-                        <div className="rounded-lg bg-gray-50 p-2 text-center">
-                          <p className="text-[8px] text-gray-400">تعداد</p>
-
-                          <p className="mt-1 text-[10px] font-bold text-[#071936]">{item.quantity.toLocaleString("fa-IR")}</p>
+                      <div className="mt-2 flex flex-row gap-2">
+                        <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-blue-50">
+                          <img
+                            src={getImage(item)}
+                            alt={title}
+                            className="h-full w-full object-contain p-1"
+                            onError={(e) => {
+                              e.currentTarget.src = "/products/placeholder.jpg";
+                            }}
+                          />
                         </div>
 
-                        <div className="rounded-lg bg-gray-50 p-2 text-center">
-                          <p className="text-[8px] text-gray-400">قیمت واحد</p>
+                        <div className="min-w-0 flex-1">
+                          <h2 className="truncate text-xs font-bold text-[#071936]">{title}</h2>
 
-                          <p className="mt-1 text-[9px] font-bold text-[#071936]">{item.price.toLocaleString("fa-IR")}</p>
-                        </div>
+                          <div className="mt-1.5 flex flex-wrap gap-1">
+                            <span className="rounded-md bg-gray-50 px-1.5 py-1 text-[7px] font-semibold text-gray-600">تعداد: {itemQuantity.toLocaleString("fa-IR")}</span>
+                          </div>
 
-                        <div className="rounded-lg bg-blue-50 p-2 text-center">
-                          <p className="text-[8px] text-gray-400">مبلغ</p>
+                          <div className="mt-1.5 flex items-center justify-between gap-2">
+                            <div>
+                              <p className="text-[7px] text-gray-400">قیمت واحد</p>
 
-                          <p className="mt-1 text-[9px] font-bold text-blue-600">{itemTotal.toLocaleString("fa-IR")}</p>
+                              <p className="mt-0.5 whitespace-nowrap text-[9px] font-semibold text-gray-600">{itemPrice.toLocaleString("fa-IR")} تومان</p>
+                            </div>
+
+                            <div className="text-left">
+                              <p className="text-[7px] text-gray-400">مبلغ کل</p>
+
+                              <p className="mt-0.5 whitespace-nowrap text-[10px] font-bold text-blue-600">{itemTotal.toLocaleString("fa-IR")}</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -356,18 +446,18 @@ export default function Cart() {
                 })}
               </div>
 
-              <div className="mt-5 sm:mt-8 flex justify-end">
-                <div className="w-full sm:w-96 rounded-xl sm:rounded-2xl bg-blue-50 border border-blue-100 p-4 sm:p-5">
+              <div className="mt-4 flex justify-end border-t border-gray-200 pt-4 sm:mt-8 sm:pt-6">
+                <div className="w-full rounded-xl border border-gray-300 bg-gray-50 p-3 sm:w-96 sm:rounded-2xl sm:p-5">
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs sm:text-sm font-semibold text-gray-600">جمع کل</span>
+                    <span className="text-xs font-semibold text-gray-600 sm:text-sm">جمع کل</span>
 
-                    <span className="text-lg sm:text-2xl font-bold text-blue-600 text-left">{totalAmount.toLocaleString("fa-IR")} تومان</span>
+                    <span className="text-base font-bold text-blue-600 sm:text-2xl">{Number(totalAmount || 0).toLocaleString("fa-IR")} تومان</span>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-5 sm:mt-8 pt-4 sm:pt-5 border-t border-gray-200 text-center">
-                <p className="text-xs sm:text-sm text-gray-500">با تشکر از خرید شما از Rezin Turk</p>
+              <div className="mt-5 flex flex-col gap-2 border-t border-gray-200 pt-4 text-center sm:mt-8 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
+                <p className="text-[9px] text-gray-500 sm:text-sm">با تشکر از خرید شما از Rezin Turk</p>
               </div>
             </div>
           </section>
